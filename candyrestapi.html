@@ -1,0 +1,166 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CANDY SHOP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form>
+            <div class="form-group">
+                <label for="CandyName">Candy Name:</label>
+                <input type="text" class="form-control" id="CandyName" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input type="text" class="form-control" id="description" name="description" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="number" class="form-control" id="price" name="price" required>
+            </div>
+            <div class="form-group">
+                <label for="quality">Quantity:</label>
+                <input type="number" class="form-control" id="quality" name="quality" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="button">Add Item</button>
+        </form>
+        <ul id="listofitems"></ul>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            axios.get("https://crudcrud.com/api/57622f5b2da6495bb00ff4ef5bfea9cb/candies")
+                .then((res) => {
+                    for (let i = 0; i < res.data.length; i++) {
+                        onscreen(res.data[i]);
+                    }
+                })
+                .catch((err) => console.log(err));
+        });
+
+        const button = document.getElementById("button");
+        const CandyName = document.getElementById("CandyName");
+        const description = document.getElementById("description");
+        const price = document.getElementById("price");
+        const quality = document.getElementById("quality");
+
+        button.onclick = (event) => {
+            event.preventDefault();
+            let obj ={
+                CandyName: CandyName.value,
+                description: description.value,
+                price: price.value,
+                quality: quality.value,
+            };
+            onscreen(obj);
+            axios.post("https://crudcrud.com/api/57622f5b2da6495bb00ff4ef5bfea9cb/candies",obj)
+                
+                .then((res) => console.log(res))
+                .catch((err) => console.log(err));
+
+            CandyName.value = "";
+            description.value = "";
+            price.value = "";
+            quality.value = "";
+        };
+
+        function onscreen(obj) {
+            const parent = document.getElementById("listofitems");
+            const li = document.createElement("li");
+            li.id = obj._id;
+            li.classList.add("list-group-item");
+            li.textContent =
+                obj.CandyName + " | " + obj.description + " | " + obj.price + " | " + obj.quality + " ";
+
+            const buy1 = document.createElement("button");
+            buy1.id = obj._id;
+            buy1.textContent = "Buy 1";
+            buy1.classList.add("btn", "btn-primary", "btn-sm", "me-2");
+            buy1.onclick = () => {
+                if (obj.quality < 1) {
+                    alert("Out of stock");
+                } else {
+                    CandyName.value = obj.CandyName;
+                    description.value = obj.description;
+                    price.value = obj.price;
+                    quality.value = obj.quality - 1;
+                    axios
+                        .delete(
+                            `https://crudcrud.com/api/57622f5b2da6495bb00ff4ef5bfea9cb/candies/${obj._id}`
+                        )
+                        .then((res) => console.log(res))
+                        .catch((err) => console.log(err));
+                    parent.removeChild(li);
+                }
+            };
+
+            li.appendChild(buy1);
+
+            const buy2 = document.createElement("button");
+            buy2.id = obj._id;
+            buy2.textContent = "Buy 2";
+            buy2.classList.add("btn", "btn-primary", "btn-sm", "me-2");
+            buy2.onclick = () => {
+                if (obj.quality < 2) {
+                    alert("Out of stock");
+                } else {
+                    CandyName.value = obj.CandyName;
+                    description.value = obj.description;
+                    price.value = obj.price;
+                    quality.value = obj.quality - 2;
+                    axios
+                        .delete(
+                            `https://crudcrud.com/api/57622f5b2da6495bb00ff4ef5bfea9cb/candies/${obj._id}`
+                        )
+                        .then((res) => console.log(res))
+                        .catch((err) => console.log(err));
+                    parent.removeChild(li);
+                }
+            };
+
+            li.appendChild(buy2);
+
+            const buy3 = document.createElement("button");
+            buy3.id = obj._id;
+            buy3.textContent = "Buy 3";
+            buy3.classList.add("btn", "btn-primary", "btn-sm");
+            buy3.onclick = () => {
+                if (obj.quality < 3) {
+                    alert("Out of stock");
+                } else {
+                    CandyName.value = obj.CandyName;
+                    description.value = obj.description;
+                    price.value = obj.price;
+                    quality.value = obj.quality - 3;
+                    axios
+                        .delete(
+                            `https://crudcrud.com/api/57622f5b2da6495bb00ff4ef5bfea9cb/candies/${obj._id}`
+                        )
+                        .then((res) => console.log(res))
+                        .catch((err) => console.log(err));
+                    parent.removeChild(li);
+                }
+            };
+
+            li.appendChild(buy3);
+
+            parent.appendChild(li);
+        }
+    </script>
+</body>
+</html>
+
+
+            
+               
+                    
